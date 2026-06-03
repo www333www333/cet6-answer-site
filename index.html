@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>大学英语六级近三年真题答案详解库</title>
+    <meta
+      name="description"
+      content="面向大学英语六级近三年笔试套卷的本地答案详解资料库，支持检索、筛选、编辑、导入、导出和打印。"
+    />
+    <meta name="theme-color" content="#1f4d3c" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="试卷筛选">
+        <div class="brand">
+          <div class="brand-mark">C6</div>
+          <div>
+            <p class="eyebrow">CET-6 Archive</p>
+            <h1>六级答案详解库</h1>
+          </div>
+        </div>
+
+        <label class="search-box" for="searchInput">
+          <span>检索</span>
+          <input id="searchInput" type="search" placeholder="年份、月份、套卷、题型..." />
+        </label>
+
+        <div class="filter-group">
+          <p class="filter-title">年份</p>
+          <div class="segmented" id="yearFilters" role="group" aria-label="按年份筛选"></div>
+        </div>
+
+        <div class="filter-group">
+          <p class="filter-title">场次</p>
+          <div class="segmented" id="monthFilters" role="group" aria-label="按场次筛选"></div>
+        </div>
+
+        <div class="filter-group">
+          <p class="filter-title">内容状态</p>
+          <div class="segmented" id="statusFilters" role="group" aria-label="按内容状态筛选"></div>
+        </div>
+
+        <div class="actions">
+          <button class="icon-button" id="printButton" type="button" title="打印当前套卷">⎙</button>
+          <button class="icon-button" id="exportButton" type="button" title="导出本地资料 JSON">⇩</button>
+          <label class="icon-button file-button" title="导入授权资料 JSON">
+            ⇧
+            <input id="importInput" type="file" accept="application/json" />
+          </label>
+        </div>
+
+        <div class="notice">
+          <strong>版权提示</strong>
+          <p>站点已建好 2023-2025 共 18 套资料位。请只导入你自有、学校授权或可合法使用的真题与详解。</p>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <section class="top-panel">
+          <div class="hero-copy">
+            <p class="eyebrow">2023-2025 已完成常规笔试场次</p>
+            <h2>按年份、场次、套卷管理六级答案与逐题解析</h2>
+            <p>
+              支持把答案表、写作范文、翻译译文、听力和阅读解析统一整理到一个本地网页里，后续可直接打印或导出备份。
+            </p>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <div class="sheet sheet-a">
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <div class="sheet sheet-b">
+              <b>CET-6</b>
+              <span>Answer Key</span>
+              <i></i><i></i><i></i>
+            </div>
+          </div>
+        </section>
+
+        <section class="metrics" aria-label="资料统计">
+          <article>
+            <span id="paperCount">18</span>
+            <p>套卷资料位</p>
+          </article>
+          <article>
+            <span id="completedCount">0</span>
+            <p>已录入</p>
+          </article>
+          <article>
+            <span>6</span>
+            <p>考试场次</p>
+          </article>
+          <article>
+            <span>4</span>
+            <p>核心题型</p>
+          </article>
+        </section>
+
+        <section class="content-grid">
+          <div class="paper-list-panel">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Paper List</p>
+                <h3>试卷目录</h3>
+              </div>
+              <span id="resultCount" class="pill">0 项</span>
+            </div>
+            <div id="paperList" class="paper-list" aria-live="polite"></div>
+          </div>
+
+          <article class="detail-panel" id="detailPanel">
+            <div class="empty-state">
+              <h3>选择一套试卷</h3>
+              <p>左侧目录中选择任意套卷后，可查看答案表、解析框架和导入内容。</p>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <template id="detailTemplate">
+      <div class="detail-header">
+        <div>
+          <p class="eyebrow detail-date"></p>
+          <h3 class="detail-title"></h3>
+          <p class="detail-subtitle"></p>
+        </div>
+        <span class="status-badge"></span>
+      </div>
+
+      <div class="resource-strip">
+        <a class="resource-link paper-url" target="_blank" rel="noopener">打开真题 PDF</a>
+        <a class="resource-link answer-url" target="_blank" rel="noopener">打开答案 PDF</a>
+      </div>
+
+      <div class="detail-tabs" role="tablist" aria-label="题型切换">
+        <button class="tab-button active" type="button" data-tab="answers">答案表</button>
+        <button class="tab-button" type="button" data-tab="writing">写作</button>
+        <button class="tab-button" type="button" data-tab="listening">听力</button>
+        <button class="tab-button" type="button" data-tab="reading">阅读</button>
+        <button class="tab-button" type="button" data-tab="translation">翻译</button>
+        <button class="tab-button" type="button" data-tab="import">录入</button>
+      </div>
+
+      <div class="tab-view active" data-view="answers">
+        <div class="answer-tools">
+          <button class="primary-button" type="button" data-action="edit">编辑本套答案</button>
+          <button class="secondary-button" type="button" data-action="save" hidden>保存</button>
+          <button class="secondary-button" type="button" data-action="cancel" hidden>取消</button>
+        </div>
+        <div class="answer-table-wrap">
+          <table class="answer-table">
+            <thead>
+              <tr>
+                <th>题号</th>
+                <th>答案</th>
+                <th>解析摘要</th>
+              </tr>
+            </thead>
+            <tbody class="answerRows"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tab-view" data-view="writing"></div>
+      <div class="tab-view" data-view="listening"></div>
+      <div class="tab-view" data-view="reading"></div>
+      <div class="tab-view" data-view="translation"></div>
+
+      <div class="tab-view import-view" data-view="import">
+        <h4>导入本套卷授权内容</h4>
+        <p>
+          可粘贴符合格式的 JSON，只会更新当前套卷。字段可以只填一部分，空字段会保留原内容。
+        </p>
+        <textarea id="singleImport" spellcheck="false"></textarea>
+        <div class="answer-tools">
+          <button class="primary-button" type="button" data-action="load-sample">填入模板</button>
+          <button class="secondary-button" type="button" data-action="apply-json">应用到当前套卷</button>
+        </div>
+      </div>
+    </template>
+
+    <script src="./data.js"></script>
+    <script src="./app.js"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./sw.js").catch(() => {});
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "大学英语六级答案详解库",
+  "short_name": "六级详解",
+  "description": "近三年大学英语六级答案详解资料库",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f7f2",
+  "theme_color": "#1f4d3c",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
