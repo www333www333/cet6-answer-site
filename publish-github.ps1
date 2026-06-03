@@ -26,8 +26,10 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 $repoExists = $true
-gh repo view "$owner/$RepoName" *> $null
-if ($LASTEXITCODE -ne 0) {
+try {
+  gh repo view "$owner/$RepoName" *> $null
+  $repoExists = $LASTEXITCODE -eq 0
+} catch {
   $repoExists = $false
 }
 
